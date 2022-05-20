@@ -1,0 +1,80 @@
+# Server settings
+server:
+  port: 8008
+  # Enabling response compression to get a better performance for responses from service APIs
+  compression:
+    enabled: true
+    min-response-size: 512
+    mime-types: text/html, text/xml, text/plain, text/css, text/javascript, application/javascript, application/json
+
+# log4j setting  - Use this without logback.xml
+#log4j:
+#  rootUTCLogger: info
+
+# logging configuration for Hibernate  - Use this without logback.xml
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: off #debug
+#        type:
+#          descriptor:
+#            sql: off #trace
+
+# Spring configuration
+spring:
+  # Service or application name
+  application:
+    name: concierge-api-gateway
+
+  # Adding this configuration using public-key-location with a dummy public key
+  # to continue with tests, we must check OAuth part to do this
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8090/auth/realms/concierge
+
+  # Setting to create a distributed trace id for calls between services
+  sleuth:
+    sampler:
+      probability: 1.0
+
+  # Configuring routes
+  cloud:
+    gateway:
+      routes:
+        - id: cda-get-account-details
+          #uri: http://localhost:8080
+          uri: lb://concierge-debit-accounts
+          predicates:
+            - Path=/api/v1/accounts/**
+            - Method=GET
+          filters:
+            - RewritePath=/api/v1/accounts/(?<segment>.*), /api/v1/accounts/$\{segment}
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+        - id: get-token-details
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/access/token
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+
+# Custom setting for the app
+app:
+
+  info:
+    website: https://ngineapps.com
+    name: @project.artifactId@
+    version: @project.version@
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8018/eureka/
+  instance:
+    hostname: localhost
+    instance-id: ${spring.application.name}:${instanceId:${random.value}}
+    #mvn spring-boot:run -Dspring-boot.run.arguments=--instanceId=john
