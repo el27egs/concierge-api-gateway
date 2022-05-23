@@ -27,14 +27,6 @@ spring:
   application:
     name: concierge-api-gateway
 
-  # Adding this configuration using public-key-location with a dummy public key
-  # to continue with tests, we must check OAuth part to do this
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8090/auth/realms/concierge
-
   # Setting to create a distributed trace id for calls between services
   sleuth:
     sampler:
