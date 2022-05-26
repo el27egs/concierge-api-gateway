@@ -58,6 +58,28 @@ spring:
             - RemoveRequestHeader=Cookie
             - AuthorizationHeaderFilter
 
+        - id: cda-add-movement
+          #uri: http://localhost:8080
+          uri: lb://concierge-debit-accounts
+          predicates:
+            - Path=/api/v1/accounts/{accountId}/movements
+            - Method=POST
+          filters:
+            #- RewritePath=/api/v1/accounts/(?<segment>.*)/movements, /api/v1/accounts/$\{segment}/movements
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+
+        - id: cum-validate-account-owner
+          #uri: http://localhost:8080
+          uri: lb://concierge-user-management
+          predicates:
+            - Path=/api/v1/users/{userId}/accounts/{accountId}/validate
+            - Method=GET
+          filters:
+            #- RewritePath=/api/v1/accounts/(?<segment>.*)/movements, /api/v1/accounts/$\{segment}/movements
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+
         - id: get-token-details
           uri: http://localhost:8081
           predicates:

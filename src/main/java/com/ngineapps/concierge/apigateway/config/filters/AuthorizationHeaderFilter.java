@@ -17,7 +17,6 @@ public class AuthorizationHeaderFilter implements GatewayFilterFactory<Authoriza
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
-            log.info("First pre filter" + exchange.getRequest().getURI());
 
             List<String> header = exchange.getRequest().getHeaders().getOrEmpty("Authorization");
 
@@ -26,11 +25,10 @@ public class AuthorizationHeaderFilter implements GatewayFilterFactory<Authoriza
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();
             }
-            log.debug("Authorization was " + header.get(0));
 
-            return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-                log.info("First post filter ");
-            }));
+            log.info("Authorization header:  " + header.get(0).substring(0,15) + "...");
+
+            return chain.filter(exchange);
         };
     }
     @Override
