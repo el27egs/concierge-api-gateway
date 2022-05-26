@@ -87,6 +87,9 @@ spring:
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookie
+      discovery:
+        locator:
+          lower-case-service-id: true
 
 # Custom setting for the app
 app:
