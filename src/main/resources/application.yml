@@ -80,13 +80,6 @@ spring:
             - RemoveRequestHeader=Cookie
             - AuthorizationHeaderFilter
 
-        - id: get-token-details
-          uri: http://localhost:8081
-          predicates:
-            - Path=/api/v1/access/token
-            - Method=GET
-          filters:
-            - RemoveRequestHeader=Cookie
       discovery:
         locator:
           lower-case-service-id: true
@@ -102,8 +95,8 @@ app:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8018/eureka/
+      defaultZone: ${DEFAULT_ZONE:http://localhost:8018/eureka/}
   instance:
-    hostname: localhost
+    prefer-ip-address: true
     instance-id: ${spring.application.name}:${instanceId:${random.value}}
     #mvn spring-boot:run -Dspring-boot.run.arguments=--instanceId=john

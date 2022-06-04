@@ -29,16 +29,17 @@ public class AuthorizationHeaderFilter
 
   @Override
   public GatewayFilter apply(Config config) {
+
     return (exchange, chain) -> {
-      List<String> header = exchange.getRequest().getHeaders().getOrEmpty("Authorization");
+      List<String> headers = exchange.getRequest().getHeaders().getOrEmpty("Authorization");
 
-      if (header.isEmpty()) {
-
+      if (headers.isEmpty()) {
+        log.error("Gateway - Authorization header not found");
         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
         return exchange.getResponse().setComplete();
       }
 
-      log.info("Authorization header:  " + header.get(0).substring(0, 15) + "...");
+      log.info("Gateway - Authorization header:  " + headers.get(0).substring(0, 15) + "...");
 
       return chain.filter(exchange);
     };
