@@ -47,6 +47,17 @@ spring:
             - RemoveRequestHeader=Cookie
             - AuthorizationHeaderFilter
 
+        - id: cda-account-reactivate
+          #uri: http://localhost:8080
+          uri: lb://concierge-debit-accounts
+          predicates:
+            - Path=/api/v1/accounts/{accountId}/reactivate
+            - Method=PATCH
+          filters:
+            #- RewritePath=/api/v1/accounts/(?<segment>.*)/reactivate, /api/v1/accounts/$\{segment}/reactivate
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+
         - id: cda-get-account-movements
           #uri: http://localhost:8080
           uri: lb://concierge-debit-accounts
@@ -54,7 +65,7 @@ spring:
             - Path=/api/v1/accounts/{accountId}/movements
             - Method=GET
           filters:
-            - RewritePath=/api/v1/accounts/(?<segment>.*)/movements, /api/v1/accounts/$\{segment}/movements
+            #- RewritePath=/api/v1/accounts/(?<segment>.*)/movements, /api/v1/accounts/$\{segment}/movements
             - RemoveRequestHeader=Cookie
             - AuthorizationHeaderFilter
 
