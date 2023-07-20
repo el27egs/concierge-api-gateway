@@ -25,7 +25,7 @@ server:
 spring:
   # Service or application name
   application:
-    name: concierge-api-gateway
+    name: gateway-server
 
   # Setting to create a distributed trace id for calls between services
   sleuth:
