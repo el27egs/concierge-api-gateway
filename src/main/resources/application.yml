@@ -36,6 +36,17 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: cda-create-new-empty-account
+          #uri: http://localhost:8080
+          uri: lb://concierge-debit-accounts
+          predicates:
+            - Path=/api/v1/accounts/
+            - Method=POST
+          filters:
+            #- RewritePath=/api/v1/accounts/(?<segment>.*), /api/v1/accounts/$\{segment}
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+
         - id: cda-get-account-details
           #uri: http://localhost:8080
           uri: lb://concierge-debit-accounts
