@@ -27,11 +27,6 @@ spring:
   application:
     name: gateway-server
 
-  # Setting to create a distributed trace id for calls between services
-  sleuth:
-    sampler:
-      probability: 1.0
-
   # Configuring routes
   cloud:
     gateway:
@@ -106,6 +101,18 @@ spring:
         locator:
           lower-case-service-id: true
 
+  reactor:
+    context-propagation: auto
+
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin-server:9411/api/v2/spans
+
 # Custom setting for the app
 app:
 
@@ -113,6 +120,7 @@ app:
     website: https://ngineapps.com
     name: @project.artifactId@
     version: @project.version@
+
 
 eureka:
   client:
